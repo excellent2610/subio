@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Список підписок</title>
+</head>
+<body>
+    <h1>Список підписок</h1>
+
+    <ul>
+        {% for sub in subscriptions %}
+            <li>{{ sub.service_name }} — {{ sub.price }} {{ sub.currency }} — {{ sub.billing_cycle }}</li>
+        {% empty %}
+            <li>Підписок немає</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'dashboard' %}">Назад до панелі</a>
+</body>
+</html>

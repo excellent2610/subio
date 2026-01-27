@@ -1,0 +1,11 @@
+Django>=4.3
+psycopg2-binary
+django-crispy-forms
+celery>=5.3
+redis>=5.0
+python-dotenv
+django-allauth
+django-widget-tweaks
+matplotlib
+python-telegram-bot==20.5
+

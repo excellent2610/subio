@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Вихід | SUBIO{% endblock %}
+
+{% block content %}
+<div class="page-center">
+    <div class="card card-form">
+        <h2>Вийти з акаунту?</h2>
+        <p class="subtitle">Ви впевнені, що хочете вийти з облікового запису?</p>
+
+        <form method="post" class="form-actions">
+            {% csrf_token %}
+            <button type="submit" class="btn danger">Вийти</button>
+            <a href="{% url 'dashboard:dashboard' %}" class="btn secondary">Скасувати</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

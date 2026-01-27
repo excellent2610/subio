@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.pk %}Редагувати{% else %}Додати{% endif %} підписку</title>
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Редагувати{% else %}Додати{% endif %} підписку</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Зберегти</button>
+    </form>
+
+    <a href="{% url 'dashboard' %}">Назад до панелі</a>
+</body>
+</html>

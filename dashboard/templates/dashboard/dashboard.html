@@ -1,0 +1,1118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>SUBIO — Панель керування</title>
+
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CHART.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+
+<style>
+/* ==================================================
+   GLOBAL / RESET
+================================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+input, select {
+    font-family: inherit;
+}
+
+/* ==================================================
+   THEME VARIABLES
+================================================== */
+:root {
+    --bg-main: #f5f5f7;
+    --bg-card: #ffffff;
+    --bg-soft: #f1f1f3;
+    --bg-soft-hover: #e5e5e5;
+
+    --text-main: #111111;
+    --text-muted: #555555;
+
+    --btn-primary-bg: #111111;
+    --btn-primary-text: #ffffff;
+
+    --border-color: #dddddd;
+    --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
+
+    /* Статуси підписок */
+    --status-ok: #1b8f2f;
+    --status-warning: #ff8c00;
+    --status-danger: #b00020;
+
+    /* Карточки, фони */
+    --card-bg: #fafafa;
+    --badge-bg: #eaeaea;
+    --profile-bg: #f9fafb;
+    --profile-header-border: #e5e7eb;
+    --input-border: #d1d5db;
+    --telegram-btn-bg: #0088cc;
+    --telegram-btn-hover: #0077b3;
+    --logout-btn-bg: rgba(220, 38, 38, 0.8);
+    --logout-btn-hover: rgba(185, 28, 28, 0.9);
+    --delete-btn-hover: rgba(255, 77, 77, 0.95);
+
+    /* Градиєнти */
+    --summary-bg: #111111;
+    --summary-text: #ffffff;
+}
+
+.dark-theme {
+    --bg-main: #000000;
+    --bg-card: #1f2937;
+    --bg-soft: #374151;
+    --bg-soft-hover: #4b5563;
+
+    --text-main: #f9fafb;
+    --text-muted: #9ca3af;
+
+    --btn-primary-bg: #f9fafb;
+    --btn-primary-text: #111827;
+
+    --border-color: #4b5563;
+    --shadow-soft: 0 4px 12px rgba(0,0,0,0.3);
+
+    --status-ok: #22c55e;
+    --status-warning: #facc15;
+    --status-danger: #ef4444;
+
+    --card-bg: #1f2937;
+    --badge-bg: #374151;
+    --profile-bg: #111827;
+    --profile-header-border: #374151;
+    --input-border: #4b5563;
+    --telegram-btn-bg: #0c4a6e;
+    --telegram-btn-hover: #075985;
+    --logout-btn-bg: rgba(185, 28, 28, 0.8);
+    --logout-btn-hover: rgba(220, 38, 38, 0.9);
+    --delete-btn-hover: rgba(255, 77, 77, 0.95);
+}
+
+/* ==================================================
+   HEADER
+================================================== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 16px 32px;
+    background-color: var(--bg-card);
+    box-shadow: var(--shadow-soft);
+    transition: background-color 0.3s ease;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo img {
+    height: 28px;   /* ключове */
+    width: auto;    /* не розтягує */
+    display: block;
+}
+
+.logo-text {
+    font-size: 32px;
+    font-weight: 800;
+}
+
+
+header .actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.action-box {
+    background-color: var(--bg-card);
+    border-radius: 14px;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+}
+
+.action-box:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+header .actions button,
+.action-box .btn-add {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    transition: all 0.2s ease;
+}
+
+header .actions button:hover,
+.action-box .btn-add:hover {
+    opacity: 0.9;
+}
+
+.theme-toggle {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-soft) !important;
+    color: var(--text-main) !important;
+    font-size: 18px;
+}
+
+.theme-toggle:hover {
+    background-color: var(--bg-soft-hover);
+}
+
+.lang-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-soft);
+    color: var(--text-main);
+    font-size: 14px;
+}
+
+/* ==================================================
+   MAIN CONTAINER
+================================================== */
+main {
+    max-width: 1400px;
+    margin: 32px auto;
+    padding: 0 24px;
+}
+
+/* ==================================================
+   SUMMARY / STATS
+================================================== */
+.summary {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 36px;
+}
+
+.summary-card {
+    background-color: var(--summary-bg);
+    color: var(--summary-text);
+    border-radius: 20px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    padding: 36px;
+}
+
+.summary-card h2 {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+.summary-card .amount {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.currency-box {
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    padding: 24px;
+}
+
+.currency-box h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.currency-box select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+/* ==================================================
+   SUBSCRIPTIONS
+================================================== */
+.subscriptions {
+    background-color: var(--bg-card);
+    border-radius: 24px;
+    padding: 28px;
+    margin-bottom: 48px;
+}
+
+.subscriptions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.subscriptions-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.subscriptions-filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.subscriptions-filters input,
+.subscriptions-filters button,
+.subscriptions-filters select {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.subscriptions-filters button {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border: none;
+}
+
+.subscriptions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.subscription-card {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    padding: 22px;
+    border: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+    transition: all 0.25s ease;
+}
+
+.subscription-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-soft);
+}
+
+.subscription-card.status-ok { border-color: var(--status-ok); }
+.subscription-card.status-warning { border-color: var(--status-warning); }
+.subscription-card.status-danger { border-color: var(--status-danger); }
+
+.subscription-title {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.subscription-price {
+    font-weight: 700;
+}
+
+.subscription-badge {
+    margin: 12px 0;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background-color: var(--badge-bg);
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.subscription-date {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.subscription-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-paid {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-edit { background-color: #1976d2; }
+.btn-delete { background-color: #d32f2f; }
+.btn-paid { background-color: var(--status-ok); }
+
+/* ==================================================
+   CHART
+================================================== */
+.chart-container {
+    background-color: var(--bg-card);
+    border-radius: 24px;
+    padding: 28px;
+    margin-bottom: 48px;
+}
+
+.chart-container h2 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* ==================================================
+   PROFILE SIDEBAR
+================================================== */
+.profile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1500;
+}
+
+.profile-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.profile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 380px;
+    height: 100vh;
+    background-color: var(--profile-bg);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    z-index: 1600;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    font-family: 'Inter', sans-serif;
+    padding-bottom: 20px;
+}
+
+.profile-sidebar.open {
+    right: 0;
+}
+
+/* Header sidebar */
+.profile-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--profile-header-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.profile-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.profile-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+/* Content */
+.profile-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Cards */
+.profile-card, .telegram-card {
+    background-color: var(--profile-bg);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-card h4, .telegram-card h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* Inputs */
+.profile-card input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--input-border);
+    font-size: 14px;
+}
+
+/* Buttons */
+.profile-card button, .telegram-card button {
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.profile-card button {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.profile-card button.profile-danger {
+    background-color: #fef2f2;
+    color: #b91c1c;
+}
+
+.profile-card button.profile-danger:hover {
+    background-color: #fee2e2;
+}
+
+.telegram-card button {
+    background-color: var(--telegram-btn-bg);
+    color: #fff;
+}
+
+.telegram-card button:hover {
+    background-color: var(--telegram-btn-hover);
+}
+
+.telegram-status {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* Logout / Delete */
+.profile-logout {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 0px;
+    width: 100%;
+}
+
+.profile-logout .btn-logout {
+    width: 150px;
+    height: 48px;
+    background-color: var(--logout-btn-bg);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px 0 0 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-logout .btn-logout:hover {
+    background-color: var(--logout-btn-hover);
+}
+
+.profile-logout .btn-delete {
+    width: 150px;
+    height: 48px;
+    background-color: var(--logout-btn-bg);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 0 12px 12px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-logout .btn-delete:hover {
+    background-color: var(--delete-btn-hover);
+}
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+@media (max-width: 1100px) {
+    .subscriptions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-sidebar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 650px) {
+    .summary {
+        grid-template-columns: 1fr;
+    }
+
+    .subscriptions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-sidebar {
+        width: 100%;
+    }
+}
+</style>
+
+<body>
+
+<header>
+    <a href="{% url 'dashboard:dashboard' %}" class="logo">
+        <img src="{% static 'images/logo.png' %}" alt="SUBIO logo">
+        <span class="logo-text">SUBIO</span>
+    </a>
+        
+    <div class="actions">
+        <div class="action-box">
+            <button class="theme-toggle">🌙</button>
+            
+        </div>
+
+        <div class="action-box">
+            <button id="openProfile">Профіль</button>
+        </div>
+
+        <div class="action-box">
+            <a href="{% url 'subscriptions:add' %}" class="btn-add">Додати</a>
+        </div>
+
+        <div class="action-box">
+            <select class="lang-select">
+                <option>UA</option>
+                <option>EN</option>
+            </select>
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <!-- SUMMARY -->
+    <section class="summary">
+        <div class="summary-card">
+            <h2>Розхід на місяць</h2>
+            <div class="amount">{{ currency_sign }}{{ total_monthly }}</div>
+        </div>
+
+        <div class="currency-box">
+            <h3>Валюта відображення</h3>
+            <select id="currencySelect">
+                <option value="UAH" {% if page_currency == "UAH" %}selected{% endif %}>UAH (₴)</option>
+                <option value="USD" {% if page_currency == "USD" %}selected{% endif %}>USD ($)</option>
+                <option value="EUR" {% if page_currency == "EUR" %}selected{% endif %}>EUR (€)</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- SUBSCRIPTIONS -->
+    <section class="subscriptions">
+        <div class="subscriptions-header">
+            <h2>Мої підписки</h2>
+        </div>
+
+        <div class="subscriptions-filters">
+            <input type="text" placeholder="Пошук підписок...">
+            <form method="get">
+                <input type="date" name="filter_date" value="{{ request.GET.filter_date }}">
+                <button type="submit">Фільтр</button>
+            </form>
+        </div>
+
+        {% if subscriptions %}
+        <div class="subscriptions-grid">
+            {% for sub in subscriptions %}
+            <div class="subscription-card {{ sub.status_class }}">
+                <div>
+                    <div class="subscription-title">
+                        <span>{{ sub.service_name }}</span>
+                        <span class="subscription-price">{{ sub.price|floatformat:2 }} {{ sub.currency|upper }}</span>
+                    </div>
+
+                    <div class="subscription-badge">{{ sub.billing_cycle|capfirst }}</div>
+
+                    <div class="subscription-date">
+                        Наступний платіж:<br>
+                        <strong>{{ sub.next_payment_date|date:"d.m.Y" }}</strong><br>
+                        {% if sub.days_left != None %}
+                            Залишилось {{ sub.days_left }} днів
+                        {% else %}
+                            Дата не задана
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="subscription-actions">
+                    <a class="btn-edit" href="{% url 'subscriptions:edit' sub.pk %}">Редагувати</a>
+                    <a class="btn-delete" href="{% url 'subscriptions:delete' sub.pk %}">Видалити</a>
+
+                    <form action="{% url 'subscriptions:mark_paid' sub.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-paid">Сплачено</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>Підписок поки немає</p>
+        {% endif %}
+    </section>
+
+    <!-- CHART -->
+    <section class="chart-container">
+        <h2>Витрати по місяцях</h2>
+        <canvas id="expensesChart"></canvas>
+    </section>
+
+</main>
+
+<!-- PROFILE SIDEBAR -->
+<div id="profileOverlay" class="profile-overlay"></div>
+<aside id="profileSidebar" class="profile-sidebar">
+    <div class="profile-header">
+        <div>
+
+        <div class="profile-card">
+            <h4>💳 Підписка</h4>
+            <p>Поточний тариф: —</p>
+            <p>Статус: —</p>
+            <button>Змінити тариф</button>
+            <button class="profile-danger">Скасувати</button>
+        </div>
+
+        <!-- TELEGRAM / СПОВІЩЕННЯ -->
+        <div class="telegram-card">
+            <h4>🤖 Telegram бот</h4>
+            <button id="sendNotification">Надіслати сповіщення</button>
+            <p class="telegram-status">Останній статус: —</p>
+        </div>
+        
+        <!-- Кнопка в sidebar вийти -->
+        <div class="profile-logout">
+            <a href="{% url 'users:logout_confirm' %}" class="btn-logout">Вийти</a>
+            <a href="{% url 'users:delete_account_confirm' %}" class="btn-delete">Видалити акаунт</a>
+        </div>
+    </div>
+</aside>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ==================================================
+       PROFILE SIDEBAR (OPEN / CLOSE)
+    ================================================== */
+
+    const openProfileButton = document.getElementById('openProfile');
+    const closeProfileButton = document.getElementById('closeProfile');
+    const profileSidebar = document.getElementById('profileSidebar');
+    const profileOverlay = document.getElementById('profileOverlay');
+
+    if (openProfileButton) {
+        openProfileButton.addEventListener('click', function () {
+            profileSidebar.classList.add('open');
+            profileOverlay.classList.add('show');
+        });
+    }
+
+    if (closeProfileButton) {
+        closeProfileButton.addEventListener('click', function () {
+            profileSidebar.classList.remove('open');
+            profileOverlay.classList.remove('show');
+        });
+    }
+
+    if (profileOverlay) {
+        profileOverlay.addEventListener('click', function () {
+            profileSidebar.classList.remove('open');
+            profileOverlay.classList.remove('show');
+        });
+    }
+
+    /* ==================================================
+       ACCOUNT SETTINGS — USERNAME
+    ================================================== */
+
+    const usernameInput = document.getElementById('usernameInput');
+    const saveUsernameBtn = document.getElementById('saveUsernameBtn');
+
+    if (saveUsernameBtn && usernameInput) {
+        saveUsernameBtn.addEventListener('click', function () {
+
+            const newUsername = usernameInput.value.trim();
+
+            if (newUsername.length === 0) {
+                alert('Нік не може бути порожнім');
+                return;
+            }
+
+            fetch('/users/update-username/', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({
+                    username: newUsername
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    alert('Нік успішно змінено!');
+                    window.location.reload();
+                } else {
+                    alert(data.error || 'Помилка збереження ніку');
+                }
+            })
+            .catch(function () {
+                alert('Помилка зʼєднання з сервером');
+            });
+        });
+    }
+
+    /* ==================================================
+       CHANGE PASSWORD
+    ================================================== */
+
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', function () {
+            window.location.href = '/accounts/password/change/';
+        });
+    }
+
+    /* ==================================================
+       SUBSCRIPTION SETTINGS
+    ================================================== */
+
+    const changePlanBtn = document.getElementById('changePlanBtn');
+    const cancelPlanBtn = document.getElementById('cancelPlanBtn');
+
+    if (changePlanBtn) {
+        changePlanBtn.addEventListener('click', function () {
+            window.location.href = '/subscriptions/plans/';
+        });
+    }
+
+    if (cancelPlanBtn) {
+        cancelPlanBtn.addEventListener('click', function () {
+
+            const confirmed = confirm('Ви впевнені, що хочете скасувати підписку?');
+            if (!confirmed) return;
+
+            fetch('/subscriptions/cancel/', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-CSRFToken': getCSRFToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Підписку скасовано');
+                    window.location.reload();
+                } else {
+                    alert(data.error || 'Не вдалося скасувати підписку');
+                }
+            })
+            .catch(function () {
+                alert('Помилка зʼєднання');
+            });
+        });
+    }
+
+    /* ==================================================
+       TELEGRAM / NOTIFICATIONS
+    ================================================== */
+
+    const sendNotificationBtn = document.getElementById('sendNotification');
+
+    if (sendNotificationBtn) {
+        sendNotificationBtn.addEventListener('click', function () {
+
+            fetch('/notifications/test/', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-CSRFToken': getCSRFToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Сповіщення надіслано!');
+                } else {
+                    alert(data.error || 'Помилка при відправці');
+                }
+            })
+            .catch(function () {
+                alert('Помилка зʼєднання');
+            });
+        });
+    }
+
+/* ==================================================
+   LOGOUT
+================================================== */
+const logoutBtn = document.getElementById('logoutBtn');
+
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', function (event) {
+        event.preventDefault(); // зупиняємо стандартне submit
+        const confirmed = confirm('Ви впевнені, що хочете вийти з акаунту?');
+        if (!confirmed) return;
+
+        fetch('/users/logout/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        })
+        .then(function (response) {
+            if (response.ok) {
+                window.location.href = '/users/login/';
+            } else {
+                alert('Не вдалося вийти з акаунту');
+            }
+        })
+        .catch(function () {
+            alert('Помилка зʼєднання');
+        });
+    });
+}
+
+/* ==================================================
+   DELETE ACCOUNT + SUBSCRIPTIONS
+================================================== */
+const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+
+if (deleteAccountBtn) {
+    deleteAccountBtn.addEventListener('click', function (event) {
+        event.preventDefault(); // зупиняємо стандартне submit
+        const confirmed = confirm('Ви впевнені, що хочете видалити акаунт? Всі підписки буде видалено!');
+        if (!confirmed) return;
+
+        fetch('/users/delete/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Акаунт та підписки успішно видалено');
+                window.location.href = '/users/login/';
+            } else {
+                alert(data.error || 'Помилка при видаленні акаунту');
+            }
+        })
+        .catch(function () {
+            alert('Помилка зʼєднання з сервером');
+        });
+    });
+}
+
+    /* ==================================================
+       CURRENCY SWITCH
+    ================================================== */
+
+    const currencySelect = document.getElementById('currencySelect');
+
+    if (currencySelect) {
+        currencySelect.addEventListener('change', function () {
+
+            const selectedCurrency = currencySelect.value;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('currency', selectedCurrency);
+
+            window.location.href = url.toString();
+        });
+    }
+
+    /* ==================================================
+       CHART.JS — MONTHLY EXPENSES
+    ================================================== */
+
+    const chartCanvas = document.getElementById('expensesChart');
+
+    if (chartCanvas) {
+
+        const months = {{ months|safe }};
+        const monthlyTotals = {{ monthly_totals|safe }};
+
+        const ctx = chartCanvas.getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Витрати',
+                    data: monthlyTotals,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    borderRadius: 12,
+                    maxBarThickness: 48
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.08)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    /* ==================================================
+    THEME SWITCH (LIGHT / DARK)
+    ================================================== */
+
+const themeToggle = document.querySelector('.theme-toggle');
+const root = document.documentElement; // або document.body
+
+// Перевірка збереженої теми
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-theme');
+}
+
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+
+    // Зберігаємо вибір користувача
+    if (document.body.classList.contains('dark-theme')) {
+        localStorage.setItem('theme', 'dark');
+    } else {
+        localStorage.setItem('theme', 'light');
+    }
+});
+
+    /* ==================================================
+       CSRF HELPER
+    ================================================== */
+
+    function getCSRFToken() {
+        const name = 'csrftoken';
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return '';
+    }
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Вхід | SUBIO{% endblock %}
+
+{% block content %}
+<div class="page-center">
+    <div class="card card-form">
+        <h2>Вхід</h2>
+        <p class="subtitle">Увійдіть у свій акаунт SUBIO</p>
+
+        <form method="post" class="form">
+            {% csrf_token %}
+            
+            <div class="field">
+                <label for="{{ form.username.id_for_label }}">Email або логін</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="error">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label for="{{ form.password.id_for_label }}">Пароль</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="error">{{ form.password.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn primary full">Увійти</button>
+        </form>
+
+        <p class="hint">
+            Немає акаунту? <a href="{% url 'users:register' %}">Зареєструватися</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

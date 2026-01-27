@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SUBIO{% endblock %}</title>
+
+    <!-- THEME INIT (must be before CSS) -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                document.documentElement.classList.add("dark");
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+
+<body>
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="logo">
+            <a href="{% url 'dashboard:dashboard' %}">SUBIO</a>
+        </div>
+
+        <div class="actions">
+            <button id="themeToggle" class="btn secondary" aria-label="Toggle theme">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== CONTENT ===== -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ===== THEME SCRIPT ===== -->
+    <script>
+        const root = document.documentElement;
+        const btn = document.getElementById("themeToggle");
+        const icon = document.getElementById("themeIcon");
+
+        function syncIcon() {
+            icon.textContent = root.classList.contains("dark") ? "☀️" : "🌙";
+        }
+
+        syncIcon();
+
+        btn?.addEventListener("click", () => {
+            root.classList.toggle("dark");
+            localStorage.setItem(
+                "theme",
+                root.classList.contains("dark") ? "dark" : "light"
+            );
+            syncIcon();
+        });
+    </script>
+</body>
+</html>

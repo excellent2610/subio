@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Реєстрація | SUBIO{% endblock %}
+
+{% block content %}
+<div class="page-center">
+    <div class="card card-form">
+        <h2>Реєстрація</h2>
+        <p class="subtitle">Створіть акаунт у SUBIO</p>
+
+        <form method="post" class="form">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn primary full">Створити акаунт</button>
+        </form>
+
+        <p class="hint">
+            Вже маєте акаунт? <a href="{% url 'users:login' %}">Увійти</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

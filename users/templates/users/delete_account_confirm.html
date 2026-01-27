@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Видалити акаунт | SUBIO{% endblock %}
+
+{% block content %}
+<div class="page-center">
+    <div class="card card-form">
+        <h2>Видалити акаунт?</h2>
+        <p class="subtitle warning">
+            Цю дію неможливо скасувати. Усі підписки та дані буде видалено назавжди.
+        </p>
+
+        <form method="post" class="form-actions">
+            {% csrf_token %}
+            <button type="submit" class="btn danger">Видалити акаунт</button>
+            <a href="{% url 'dashboard:dashboard' %}" class="btn secondary">Скасувати</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

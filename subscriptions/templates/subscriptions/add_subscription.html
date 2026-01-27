@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Додати підписку | SUBIO{% endblock %}
+
+{% block content %}
+<div class="page-center">
+    <div class="card">
+
+        <h2>Додати підписку</h2>
+        <p class="subtitle">
+            Заповніть інформацію про сервіс та умови оплати
+        </p>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- Назва -->
+            <div class="field">
+                <label for="{{ form.service_name.id_for_label }}">
+                    Назва підписки
+                </label>
+                {{ form.service_name }}
+                {% if form.service_name.errors %}
+                    <small class="error-text">
+                        {{ form.service_name.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <!-- Ціна -->
+            <div class="field">
+                <label for="{{ form.price.id_for_label }}">
+                    Ціна
+                </label>
+                {{ form.price }}
+                {% if form.price.errors %}
+                    <small class="error-text">
+                        {{ form.price.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <!-- Валюта -->
+            <div class="field">
+                <label for="{{ form.currency.id_for_label }}">
+                    Валюта
+                </label>
+                {{ form.currency }}
+                {% if form.currency.errors %}
+                    <small class="error-text">
+                        {{ form.currency.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <!-- Цикл -->
+            <div class="field">
+                <label for="{{ form.billing_cycle.id_for_label }}">
+                    Цикл оплати
+                </label>
+                {{ form.billing_cycle }}
+                {% if form.billing_cycle.errors %}
+                    <small class="error-text">
+                        {{ form.billing_cycle.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <!-- Дата -->
+            <div class="field">
+                <label for="{{ form.next_payment_date.id_for_label }}">
+                    Дата наступного платежу
+                </label>
+                {{ form.next_payment_date }}
+                {% if form.next_payment_date.errors %}
+                    <small class="error-text">
+                        {{ form.next_payment_date.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn primary">
+                    Зберегти
+                </button>
+
+                <a href="{% url 'dashboard:dashboard' %}" class="btn secondary">
+                    Скасувати
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
