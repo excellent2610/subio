@@ -16,7 +16,6 @@ nginx.exe -t
 
 nginx.exe
 
-
 python
 
 http://localhost:8000/
@@ -48,5 +47,5 @@ git remote add origin https://github.com/excellent2610/subio.git
 
 git status
 git add .
-git commit -m "subio2.0.1"
+git commit -m "subio2.0.1.1"
 git push

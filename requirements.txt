@@ -9,3 +9,4 @@ django-widget-tweaks
 matplotlib
 python-telegram-bot==20.5
 dj-database-url
+gunicorn
