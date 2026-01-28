@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 # -------------------------
 # Load environment variables
@@ -12,8 +13,13 @@ load_dotenv(BASE_DIR / "Example.env")  # Явно підключаємо тві�
 # Security
 # -------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("DEBUG", "True") == "True"
-ALLOWED_HOSTS = ["*"]
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = [
+    "subio.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
+
 
 # Telegram Bot Token
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -80,10 +86,11 @@ WSGI_APPLICATION = "subio.wsgi.application"
 # Database
 # -------------------------
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        'NAME': r'H:\Projects\subio2.0\db.sqlite3',
-    }
+    "default": dj_database_url.parse(
+        os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 # -------------------------

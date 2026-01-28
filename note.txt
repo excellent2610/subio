@@ -29,6 +29,7 @@ Django secret key =zi$yy^q6^8k58zk&#+zvr)4*bl-0rf(awurl2oosyf-r$*ym&y
 
 icacls H:\Projects\subio2.0 /grant $env:User-PC:F /T
 
+git commit -m "Initial commit: subio"
 
 Heroku
 shkvotersb@gmail.com
@@ -39,3 +40,13 @@ H:\Projects\subio2.0.1
 
 git config --global user.name "excellent2610"
 git config --global user.email "shkvotersb@gmail.com"
+
+
+git branch -M main
+git remote add origin https://github.com/excellent2610/subio.git
+
+
+git status
+git add .
+git commit -m "subio2.0.1"
+git push
