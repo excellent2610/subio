@@ -755,12 +755,26 @@ main {
     <div class="profile-header">
         <div>
 
+        <!-- SUPPORT -->
         <div class="profile-card">
-            <h4>💳 Підписка</h4>
-            <p>Поточний тариф: —</p>
-            <p>Статус: —</p>
-            <button>Змінити тариф</button>
-            <button class="profile-danger">Скасувати</button>
+            <h4>❤️ Support SUBIO</h4>
+
+            {% if user.is_supporter %}
+                <p>Дякуємо за підтримку проєкту 🙏</p>
+                <p class="support-status success">Статус: Supporter</p>
+            {% else %}
+                <p>
+                    SUBIO — безкоштовний інструмент.
+                    Якщо він корисний — підтримай розвиток ❤️
+                </p>
+
+                <form method="post" action="{% url 'support:activate' %}">
+                    {% csrf_token %}
+                    <button type="submit">
+                        Підтримати SUBIO
+                    </button>
+                </form>
+            {% endif %}
         </div>
 
         <!-- TELEGRAM / СПОВІЩЕННЯ -->

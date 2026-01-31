@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Support SUBIO</h1>
+
+<p>
+    SUBIO is free and open.
+    If it helps you — consider supporting development.
+</p>
+
+<ul>
+    <li>✔ Supporter badge</li>
+    <li>✔ Early access to new features</li>
+    <li>✔ Help keep SUBIO alive</li>
+</ul>
+
+<form method="post" action="{% url 'support:activate' %}">
+    {% csrf_token %}
+    <button type="submit">
+        Support SUBIO ❤️
+    </button>
+</form>
+
+{% endblock %}

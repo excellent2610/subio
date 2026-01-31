@@ -13,6 +13,7 @@ urlpatterns = [
     path("users/", include(("users.urls", "users"), namespace="users")),
     path("subscriptions/", include(("subscriptions.urls", "subscriptions"), namespace="subscriptions")),
     path('notifications/', include('notifications.urls')),
+    path("support/", include("support.urls")),
     
     # Адмінка та фавікон
     path("admin/", admin.site.urls),

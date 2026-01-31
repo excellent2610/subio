@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "dashboard",
     "notifications",
     'widget_tweaks',
+    "support"
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
